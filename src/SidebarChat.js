@@ -4,10 +4,17 @@ import db from './firebase';
 import './SidebarChat.css';
 import {Link} from "react-router-dom";
 
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Dialog from '@material-ui/core/Dialog';
+
 
 function SidebarChat({id, name,addNewChat}) {
     const [ seed, setSeed] = useState('');
     const [messages, setMessages] = useState([]);
+    const [chat , setChat] = useState('');
+
+    const [open, setOpen] = React.useState(false);
 
     useEffect(() => { 
         if (id){
@@ -27,29 +34,49 @@ function SidebarChat({id, name,addNewChat}) {
 
     },[])
 
-    const createChat = () =>{
-        const roomName = prompt("please enter name for chat");
+    const handleClickOpen = () => {
+            setOpen(true);
+          };
+          
+          const handleClose = () => {
+            setOpen(false);
+          };
+
+    const createChat = () =>{       
+
+        const roomName = chat;   
         if ( roomName){
             db.collection("rooms").add({
                 name: roomName,
             });
         }
+
     };
-    return !addNewChat ?(
+    return !addNewChat ? (
         <Link to={`/rooms/${id}`}>
             <div className="sidebarChat">
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`}/>
         <div className='sidebarChat_info'>
             <h1>{name}</h1>
             <p>{messages[0]?.message}</p>
-
+            <button onClick={event => db.collection('rooms').doc(id).delete()}>Delete</button>
         </div>
+       
         </div>
         </Link>
         
     ):(
-        <div onClick={createChat} className="sidebarChat"> 
+        <div onClick={handleClickOpen} className="sidebarChat"> 
         <h2>Add new chat</h2>
+        
+        <Dialog open={open} onClose={handleClose} >
+        <DialogTitle>
+           <input type='text' onChange = {(e) => setChat(e.target.value)} />
+        </DialogTitle>
+            <button onClick={() => createChat()}>Create</button>
+        </Dialog>
+
+        
         </div>
     )
 }
