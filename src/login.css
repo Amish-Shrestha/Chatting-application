@@ -1,0 +1,29 @@
+.login{
+    position: absolute;
+    border-radius: 20px;
+    border: 2px solid black;
+    width: 40%;
+    height: 400px;
+    box-shadow: 20px 20px 50px 10px rgb(193, 205, 22) inset;
+}
+.container{
+   text-align: center;
+}
+.container > .img > .container_img{
+    height: 150px;
+    width: 200px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top; box-shadow: 20px 20px 50px 10px pink inset;
+    margin-bottom: 40px;
+}
+.login_container{
+    box-shadow: 20px 20px 50px 10px #c9d150 inset;
+    border-radius: 10px;
+    position: absolute;
+    left: 35%;
+    bottom: 40%;
+}
+.login_container:hover{
+   
+}

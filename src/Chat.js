@@ -9,8 +9,10 @@ import { useParams } from "react-router-dom";
 import db from "./firebase";
 import { useStateValue } from "./StateProvider";
 import firebase from "firebase/compat/app";
+import { Offcanvas } from "react-bootstrap";
+import Chat_Bot from "./Chat_Bot";
 
-import { useForm } from "react-hook-form";
+// import { useForm } from "react-hook-form";
 
 function Chat() {
   const [input, setInput] = useState("");
@@ -19,12 +21,14 @@ function Chat() {
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
   const [{ user }, disptach] = useStateValue();
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
-  const submit = (e) =>{
-      console.log(e)
+
+  const submit = (e) => {
+    console.log(e)
   }
-
- 
 
   useEffect(() => {
     if (roomId) {
@@ -46,6 +50,7 @@ function Chat() {
     setSeed(Math.floor(Math.random() * 5000));
   }, [roomId]);
 
+  var startTime = performance.now()
   const sendMessage = (e) => {
     e.preventDefault();
     console.log("You typed >>>", input);
@@ -57,7 +62,17 @@ function Chat() {
     });
 
     setInput("");
+
+    
   };
+  var endTime = performance.now()
+  console.log(`estimated time:(${endTime - startTime}).toFixed(2)`)
+ 
+ const anything= ()=>{
+
+ }
+
+  
   return (
     <div className="chat">
       <div className="chat_header">
@@ -81,24 +96,32 @@ function Chat() {
             <label htmlFor="upload-file">
               <input
                 style={{ display: "none" }}
-                id="upload-file"                
+                id="upload-file"
                 type="file"
               />
               <AttachFile />
             </label>
           </IconButton>
 
-          <IconButton>
+          <IconButton onClick={handleShow}>
             <MoreVert />
           </IconButton>
+          <Offcanvas show={show} onHide={handleClose}>
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title>ChatBot</Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <Chat_Bot />
+            </Offcanvas.Body>
+          </Offcanvas>
         </div>
       </div>
+
       <div className="chat_body">
         {messages.map((message) => (
           <p
-            className={`chat_message ${
-              message.name === user.displayName && "chat_reciever"
-            }`}
+            className={`chat_message ${message.name === user.displayName && "chat_reciever"
+              }`}
           >
             <span className="chat_name">{message.name}</span>
             {message.message}
@@ -123,7 +146,6 @@ function Chat() {
             Send a message
           </button>
         </form>
-        <MicIcon />
       </div>
     </div>
   );

@@ -3,6 +3,8 @@ import React from 'react'
 import { auth, provider } from './firebase'
 import { actionTypes } from './reducer';
 import { useStateValue} from './StateProvider';
+import './login.css';
+import logo from './trinity_college_logo.jpg';
 
 function Login() {
     const [{}, dispatch] = useStateValue();
@@ -21,12 +23,18 @@ function Login() {
     }
     return (
         <div className='login'>
-            <div className='login_container'>
-
+             <div className='container'>
+            <div className='header'>
+                <h3 style={{fontStyle:"italic",fontSize:"40px" ,fontWeight:600}}>
+                    Login Page
+                 </h3>   
             </div>
+            </div>
+            <div className='login_container'>
             <Button onClick={signIn}>
-                Just with google
+                <h6>Just with google</h6>
             </Button>
+            </div>
         </div>
     )
 }
