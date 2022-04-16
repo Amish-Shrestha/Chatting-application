@@ -1,7 +1,7 @@
 import { Avatar, IconButton } from "@material-ui/core";
 import { AttachFile, SearchOutlined } from "@material-ui/icons";
 import MoreVert from "@material-ui/icons/MoreVert";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Component } from "react";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import MicIcon from "@material-ui/icons/Mic";
 import "./Chat.css";
@@ -26,9 +26,9 @@ function Chat() {
   const handleShow = () => setShow(true);
 
 
-  const submit = (e) => {
-    console.log(e)
-  }
+  // const submit = (e) => {
+  //   console.log(e)
+  // }
 
   useEffect(() => {
     if (roomId) {
@@ -147,8 +147,24 @@ function Chat() {
           </button>
         </form>
       </div>
+      {/* <ChatBOT/> */}
     </div>
   );
 }
 
 export default Chat;
+
+// export class ChatBOT extends Component {
+//   componentDidMount(){
+//     (function(d, m){
+//         var kommunicateSettings = 
+//             {"appId":"1ad57c9855fa043988261b3dab3a74ee9","popupWidget":true,"automaticChatOpenOnNavigation":true};
+//         var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+//         s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+//         var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+//         window.kommunicate = m; m._globals = kommunicateSettings;
+//     })(document, window.kommunicate || {});
+// /* NOTE : Use web server to view HTML files as real-time update will not work if you directly open the HTML file in the browser. */
+
+//   }
+// }

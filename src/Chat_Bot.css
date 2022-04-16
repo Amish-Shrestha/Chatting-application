@@ -1,0 +1,14 @@
+.chat_bot-image{
+    clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
+    height: 40px;
+    margin-top: 20px;
+}
+.chatbot_wrapper .chatbot_body  .chatbot_card  button{
+    display: none;
+}
+.chatbot_wrapper .chatbot_body  .chatbot_card  input{
+    width: 100%;
+}
+.list{
+    text-decoration: none;
+}

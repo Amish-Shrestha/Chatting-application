@@ -1,167 +1,76 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import ChatBot from 'react-simple-chatbot';
+import { Card, CardContent, CardHeader, CardMedia } from '@material-ui/core'
+import React, { useState } from 'react';
+import image from './download.png';
+import './Chat_Bot.css';
 
 
-class Review extends Component {
-    constructor(props) {
-        super(props);
+const { Configuration, OpenAIApi } = require("openai");
+function Chat_Bot() {
+    const [input, setInput] = useState('');
+    const [todo, setTodo] = useState([]);
+    const [chat, setChat] = useState([]);
 
-        this.state = {
-            name: '',
-            gender: '',
-            age: '',
-        };
+    const chatt = [
+        {message: "chat", id:"user"},
+        {message: "todo", id:"bot"},
+    ]
+
+    const sendMessage = (e) => {
+        e.preventDefault();
+        setChat([...chat, input]);
+        chatt.push({message: input, id: "user"});
+        // setInput("");
+        const configuration = new Configuration({
+            apiKey: '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',
+          });
+          const openai = new OpenAIApi(configuration);
+          openai.createCompletion("text-davinci-002", {
+            prompt: `Product discription for: ${input}`,
+            temperature: 0.7,
+            max_tokens: 256,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
+          }).then(res=>{
+            console.log(res.data.choices[0].text)
+            // setTodo([...todo, )
+            chatt.push({message: res.data.choices[0].text, id: "bot"});
+            // console.log(chatt)
+          });
     }
-
-    componentWillMount() {
-        const { steps } = this.props;
-        const { name, gender, age } = steps;
-
-        this.setState({ name, gender, age });
-    }
-
-    render() {
-        const { name, gender, age } = this.state;
-        return (
-            <div style={{ width: '100%' }}>
-                <h3>Summary</h3>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>Name</td>
-                            <td>{name.value}</td>
-                        </tr>
-                        <tr>
-                            <td>Gender</td>
-                            <td>{gender.value}</td>
-                        </tr>
-                        <tr>
-                            <td>Age</td>
-                            <td>{age.value}</td>
-                        </tr>
-                    </tbody>
-                </table>
+    return (
+        <div className='chatbot_wrapper'>
+            <div className='chatbot_body'>
+                <div className='chatbot_card'>
+                    <Card sx={{ maxWidth: "auto" }}>
+                        <CardContent>
+                            <div className='chatbot_card-contain'>
+                                {
+                                    chatt.map((ch)=>{
+                                        return <div>
+                                       <li>{ch.id}:{ch.message}</li>
+                                        </div>
+                                    })
+                                }                           
+                            </div>
+                        </CardContent>
+                        <form >
+                            <input
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Type a message"
+                                type="text"
+                            />
+                            <button onClick={sendMessage} type="submit">
+                                {" "}
+                                Send a message
+                            </button>
+                        </form>
+                    </Card>
+                </div>
             </div>
-        );
-    }
+        </div>
+    )
 }
 
-Review.propTypes = {
-    steps: PropTypes.object,
-};
-
-Review.defaultProps = {
-    steps: undefined,
-};
-
-class Chat_Bot extends Component {
-    render() {
-        return (
-            <ChatBot
-                steps={[
-                    {
-                        id: '1',
-                        message: 'What is your name?',
-                        trigger: 'name',
-                    },
-                    {
-                        id: 'name',
-                        user: true,
-                        trigger: '3',
-                    },
-                    {
-                        id: '3',
-                        message: 'Hi {previousValue}! What is your gender?',
-                        trigger: 'gender',
-                    },
-                    {
-                        id: 'gender',
-                        options: [
-                            { value: 'male', label: 'Male', trigger: '5' },
-                            { value: 'female', label: 'Female', trigger: '5' },
-                        ],
-                    },
-                    {
-                        id: '5',
-                        message: 'How old are you?',
-                        trigger: 'age',
-                    },
-                    {
-                        id: 'age',
-                        user: true,
-                        trigger: '7',
-                        validator: (value) => {
-                            if (isNaN(value)) {
-                                return 'value must be a number';
-                            } else if (value < 0) {
-                                return 'value must be positive';
-                            } else if (value > 120) {
-                                return `${value}? Come on!`;
-                            }
-
-                            return true;
-                        },
-                    },
-                    {
-                        id: '7',
-                        message: 'Great! Check out your summary',
-                        trigger: 'review',
-                    },
-                    {
-                        id: 'review',
-                        component: <Review />,
-                        asMessage: true,
-                        trigger: 'update',
-                    },
-                    {
-                        id: 'update',
-                        message: 'Would you like to update some field?',
-                        trigger: 'update-question',
-                    },
-                    {
-                        id: 'update-question',
-                        options: [
-                            { value: 'yes', label: 'Yes', trigger: 'update-yes' },
-                            { value: 'no', label: 'No', trigger: 'end-message' },
-                        ],
-                    },
-                    {
-                        id: 'update-yes',
-                        message: 'What field would you like to update?',
-                        trigger: 'update-fields',
-                    },
-                    {
-                        id: 'update-fields',
-                        options: [
-                            { value: 'name', label: 'Name', trigger: 'update-name' },
-                            { value: 'gender', label: 'Gender', trigger: 'update-gender' },
-                            { value: 'age', label: 'Age', trigger: 'update-age' },
-                        ],
-                    },
-                    {
-                        id: 'update-name',
-                        update: 'name',
-                        trigger: '7',
-                    },
-                    {
-                        id: 'update-gender',
-                        update: 'gender',
-                        trigger: '7',
-                    },
-                    {
-                        id: 'update-age',
-                        update: 'age',
-                        trigger: '7',
-                    },
-                    {
-                        id: 'end-message',
-                        message: 'Thanks! Your data was submitted successfully!',
-                        end: true,
-                    },
-                ]}
-            />
-        );
-    }
-}
 export default Chat_Bot
