@@ -11,6 +11,7 @@ import { useStateValue } from "./StateProvider";
 import firebase from "firebase/compat/app";
 import { Offcanvas } from "react-bootstrap";
 import Chat_Bot from "./Chat_Bot";
+import axios from "axios";
 
 // import { useForm } from "react-hook-form";
 
@@ -24,12 +25,32 @@ function Chat() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [form , setfrom] = useState("");
+const baseURL = ''
+const formData = ''
+const pagination = ''
 
+const data = async() =>{
+  const fetchdata = await  axios({
+    url: baseURL,
+    method: "GET",
+    headers: {
+    authorization: "token",
+    },
+  })
+        .then((res) => {
+          setfrom (res)
+         })
+        .catch((err) => {});
+}
 
-  // const submit = (e) => {
-  //   console.log(e)
-  // }
+  useEffect(() => {
+    data()
+  
 
+  },[pagination])
+
+ 
   useEffect(() => {
     if (roomId) {
       db.collection("rooms")
@@ -67,7 +88,6 @@ function Chat() {
   };
   var endTime = performance.now()
   console.log(`estimated time:(${endTime - startTime}).toFixed(2)`)
- 
  const anything= ()=>{
 
  }
@@ -168,3 +188,4 @@ export default Chat;
 
 //   }
 // }
+
